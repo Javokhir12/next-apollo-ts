@@ -1,1 +1,1 @@
-## Rick & Morty characters finder app built with NextJS + Apollo + TypeScript
+## Rick & Morty characters finder app built with NextJS + Apollo + TypeScript + Chakra UI
