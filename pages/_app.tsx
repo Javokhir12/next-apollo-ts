@@ -2,6 +2,7 @@ import type { AppProps } from 'next/app';
 import { ApolloProvider } from '@apollo/client';
 import { useApollo } from '../lib/graphql-client';
 import '../styles/globals.css';
+import { ChakraProvider } from '@chakra-ui/react';
 
 function MyApp({
   Component,
@@ -11,7 +12,9 @@ function MyApp({
 
   return (
     <ApolloProvider client={apolloClient}>
-      <Component {...pageProps} />;
+      <ChakraProvider>
+        <Component {...pageProps} />;
+      </ChakraProvider>
     </ApolloProvider>
   );
 }

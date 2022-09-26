@@ -3,6 +3,7 @@ query GetCharacters {
     results {
       id
       name
+      image
     }
   }
 }
