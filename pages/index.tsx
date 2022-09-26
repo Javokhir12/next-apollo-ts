@@ -59,17 +59,17 @@ const Home: NextPage = () => {
 
 export default Home;
 
-// export async function getStaticProps() {
-//   const apolloClient = initializeApollo();
+export async function getStaticProps() {
+  const apolloClient = initializeApollo();
 
-//   await apolloClient.query({
-//     query: GetCharactersDocument,
-//   });
+  await apolloClient.query({
+    query: GetCharactersDocument,
+  });
 
-//   return {
-//     props: {
-//       initialApolloState: apolloClient.cache.extract(),
-//     },
-//     revalidate: 60,
-//   };
-// }
+  return {
+    props: {
+      initialApolloState: apolloClient.cache.extract(),
+    },
+    revalidate: 60,
+  };
+}
