@@ -1,0 +1,9 @@
+query FilterCharactersByName($name: String) {
+  characters(filter: { name: $name }) {
+    results {
+      id
+      name
+      image
+    }
+  }
+}

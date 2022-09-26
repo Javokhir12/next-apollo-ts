@@ -1,32 +1,18 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { Heading, Container, SimpleGrid, Spinner, Box } from '@chakra-ui/react';
+import { Heading, Container, Spinner, Box } from '@chakra-ui/react';
 import {
-  GetCharactersDocument,
-  useGetCharactersQuery,
+  FilterCharactersByNameDocument,
+  useFilterCharactersByNameQuery,
 } from '../generated/graphql';
 import { initializeApollo } from '../lib/graphql-client';
-import CharacterCard from '../components/CharacterCard';
+import Search from '../components/Search';
+import CharactersList from '../components/CharactersList';
 
 const Home: NextPage = () => {
-  const { data, loading, error } = useGetCharactersQuery({
+  const { data, loading, error, refetch } = useFilterCharactersByNameQuery({
     notifyOnNetworkStatusChange: true,
   });
-
-  if (loading)
-    return (
-      <Box
-        display="flex"
-        w="100%"
-        height="100vh"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Spinner color="blue.500" size="xl" thickness="0.3rem" />;
-      </Box>
-    );
-
-  if (error) return <h2>Error :(</h2>;
 
   return (
     <>
@@ -43,15 +29,11 @@ const Home: NextPage = () => {
         <Heading mb="3rem" textAlign="center" color="green.300">
           Rick && Morty
         </Heading>
-        <SimpleGrid columns={[1, 2, 3]} spacing={10}>
-          {data?.characters?.results?.map((character) => (
-            <CharacterCard
-              key={character?.id}
-              name={character?.name!}
-              src={character?.image!}
-            />
-          ))}
-        </SimpleGrid>
+        <Search refetch={refetch} />
+
+        {loading && renderLoadingUI()}
+        {error ? renderErrorUI(error) : null}
+        {data ? <CharactersList characters={data.characters} /> : null}
       </Container>
     </>
   );
@@ -63,7 +45,10 @@ export async function getStaticProps() {
   const apolloClient = initializeApollo();
 
   await apolloClient.query({
-    query: GetCharactersDocument,
+    query: FilterCharactersByNameDocument,
+    variables: {
+      name: '',
+    },
   });
 
   return {
@@ -72,4 +57,26 @@ export async function getStaticProps() {
     },
     revalidate: 60,
   };
+}
+
+function renderLoadingUI() {
+  return (
+    <Box
+      display="flex"
+      w="100%"
+      height="100vh"
+      alignItems="center"
+      justifyContent="center"
+    >
+      <Spinner color="blue.500" size="xl" thickness="0.3rem" />;
+    </Box>
+  );
+}
+
+function renderErrorUI(error: { message: string; [key: string]: any }) {
+  return (
+    <Heading mb="3rem" textAlign="center" color="red.400">
+      {error.message} :/
+    </Heading>
+  );
 }
