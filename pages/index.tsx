@@ -31,7 +31,7 @@ const Home: NextPage = () => {
         </Heading>
         <Search refetch={refetch} />
 
-        {loading && renderLoadingUI()}
+        {loading && !data && renderLoadingUI()}
         {error ? renderErrorUI(error) : null}
         {data ? <CharactersList characters={data.characters} /> : null}
       </Container>
@@ -46,9 +46,6 @@ export async function getStaticProps() {
 
   await apolloClient.query({
     query: FilterCharactersByNameDocument,
-    variables: {
-      name: '',
-    },
   });
 
   return {
@@ -68,7 +65,7 @@ function renderLoadingUI() {
       alignItems="center"
       justifyContent="center"
     >
-      <Spinner color="blue.500" size="xl" thickness="0.3rem" />;
+      <Spinner color="green.400" size="xl" thickness="0.3rem" />;
     </Box>
   );
 }

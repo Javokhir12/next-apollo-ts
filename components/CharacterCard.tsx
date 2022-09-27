@@ -1,12 +1,14 @@
 import { Box } from '@chakra-ui/react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export interface CharacterCardProps {
   name: string;
   src: string;
+  id: string;
 }
 
-function CharacterCard({ name, src }: CharacterCardProps) {
+function CharacterCard({ name, src, id }: CharacterCardProps) {
   return (
     <Box
       position="relative"
@@ -19,7 +21,9 @@ function CharacterCard({ name, src }: CharacterCardProps) {
       <Image src={src} alt={name} width={250} height={225} />
 
       <Box as="h3" textAlign="center" my="1" color="gray.700" fontSize="lg">
-        {name}
+        <Link href={`/characters/${id}`} passHref>
+          <a>{name}</a>
+        </Link>
       </Box>
     </Box>
   );

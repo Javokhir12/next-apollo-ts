@@ -15,6 +15,7 @@ function CharactersList({ characters }: CharactersListPorps) {
           key={character?.id}
           name={character?.name!}
           src={character?.image!}
+          id={character?.id!}
         />
       ))}
     </SimpleGrid>
