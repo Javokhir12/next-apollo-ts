@@ -1,8 +1,11 @@
 import { Button, Flex, Heading, Text } from '@chakra-ui/react';
-import { GetServerSideProps } from 'next';
+import { GetStaticProps, GetStaticPaths } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
+  FilterCharactersByNameDocument,
+  FilterCharactersByNameQuery,
+  FilterCharactersByNameQueryVariables,
   GetCharacterByIdDocument,
   GetCharacterByIdQuery,
   GetCharacterByIdQueryVariables,
@@ -57,9 +60,31 @@ function Character({ character }: CharacterProps) {
 
 export default Character;
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getStaticPaths: GetStaticPaths = async (ctx) => {
   const apolloClient = initializeApollo();
-  const { characterId } = ctx.query;
+
+  // pre-generate the first 20 characters
+  const { data } = await apolloClient.query<
+    FilterCharactersByNameQuery,
+    FilterCharactersByNameQueryVariables
+  >({
+    query: FilterCharactersByNameDocument,
+  });
+
+  const paths =
+    data.characters?.results?.map((character) => ({
+      params: { characterId: character?.id as string },
+    })) ?? [];
+
+  return {
+    paths,
+    fallback: true,
+  };
+};
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  const apolloClient = initializeApollo();
+  const { characterId } = ctx.params!;
 
   const { data } = await apolloClient.query<
     GetCharacterByIdQuery,
