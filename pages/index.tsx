@@ -1,6 +1,14 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { Heading, Container, Spinner, Box } from '@chakra-ui/react';
+import {
+  Heading,
+  Container,
+  Spinner,
+  Box,
+  Flex,
+  Button,
+  Spacer,
+} from '@chakra-ui/react';
 import {
   FilterCharactersByNameDocument,
   useFilterCharactersByNameQuery,
@@ -13,6 +21,18 @@ const Home: NextPage = () => {
   const { data, loading, error, refetch } = useFilterCharactersByNameQuery({
     notifyOnNetworkStatusChange: true,
   });
+
+  const handleNext = () => {
+    refetch({
+      page: data?.characters?.info?.next,
+    });
+  };
+
+  const handlePrev = () => {
+    refetch({
+      page: data?.characters?.info?.prev,
+    });
+  };
 
   return (
     <>
@@ -34,6 +54,30 @@ const Home: NextPage = () => {
         {loading && !data && renderLoadingUI()}
         {error ? renderErrorUI(error) : null}
         {data ? <CharactersList characters={data.characters} /> : null}
+
+        <Flex mt="1.2rem">
+          <Button
+            colorScheme="green"
+            size="lg"
+            ml="4rem"
+            mt="2rem"
+            disabled={!data?.characters?.info?.prev}
+            onClick={handlePrev}
+          >
+            Previous
+          </Button>
+          <Spacer />
+          <Button
+            colorScheme="green"
+            size="lg"
+            ml="4rem"
+            mt="2rem"
+            disabled={!data?.characters?.info?.next}
+            onClick={handleNext}
+          >
+            Next
+          </Button>
+        </Flex>
       </Container>
     </>
   );

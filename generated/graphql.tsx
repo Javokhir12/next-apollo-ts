@@ -200,12 +200,20 @@ export type QueryLocationsByIdsArgs = {
 
 export type FilterCharactersByNameQueryVariables = Exact<{
   name?: InputMaybe<Scalars['String']>;
+  page?: InputMaybe<Scalars['Int']>;
 }>;
 
 export type FilterCharactersByNameQuery = {
   __typename?: 'Query';
   characters?: {
     __typename?: 'Characters';
+    info?: {
+      __typename?: 'Info';
+      count?: number | null;
+      pages?: number | null;
+      next?: number | null;
+      prev?: number | null;
+    } | null;
     results?: Array<{
       __typename?: 'Character';
       id?: string | null;
@@ -237,8 +245,14 @@ export type GetCharacterByIdQuery = {
 };
 
 export const FilterCharactersByNameDocument = gql`
-  query FilterCharactersByName($name: String) {
-    characters(filter: { name: $name }) {
+  query FilterCharactersByName($name: String, $page: Int) {
+    characters(filter: { name: $name }, page: $page) {
+      info {
+        count
+        pages
+        next
+        prev
+      }
       results {
         id
         name
@@ -261,6 +275,7 @@ export const FilterCharactersByNameDocument = gql`
  * const { data, loading, error } = useFilterCharactersByNameQuery({
  *   variables: {
  *      name: // value for 'name'
+ *      page: // value for 'page'
  *   },
  * });
  */

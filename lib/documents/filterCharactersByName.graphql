@@ -1,5 +1,11 @@
-query FilterCharactersByName($name: String) {
-  characters(filter: { name: $name }) {
+query FilterCharactersByName($name: String, $page: Int) {
+  characters(filter: { name: $name }, page: $page) {
+    info {
+      count
+      pages
+      next
+      prev
+    }
     results {
       id
       name
