@@ -1,4 +1,4 @@
-import { Button, Center, Flex, Heading, Spacer, Text } from '@chakra-ui/react';
+import { Button, Flex, Heading, Text } from '@chakra-ui/react';
 import { GetServerSideProps } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -22,28 +22,34 @@ function Character({ character }: CharacterProps) {
       <Flex
         alignItems="center"
         justifyContent="center"
-        width="100%"
-        height="100vh"
-        gap={16}
+        width="fit-content"
+        mx="auto"
+        gap={20}
+        mt="6rem"
+        borderWidth="1px"
+        borderRadius="lg"
+        overflow="hidden"
       >
-        <Center bg="green.500">
-          <Image
-            src={character?.image!}
-            alt={character?.name!}
-            width={350}
-            height={275}
-          />
-        </Center>
-        <Center>
-          <Flex direction="column">
-            <Heading as="h2" color="green.300">
-              {character?.name}
-            </Heading>
-            <Text fontSize="2xl">Origin: {character?.origin?.name}</Text>
-            <Text fontSize="2xl">Status: {character?.status}</Text>
-            <Text fontSize="2xl">Gender: {character?.gender}</Text>
-          </Flex>
-        </Center>
+        <Image
+          src={character?.image!}
+          alt={character?.name!}
+          width={350}
+          height={275}
+        />
+        <Flex direction="column" mr="1.5rem">
+          <Heading as="h2" color="green.300">
+            {character?.name}
+          </Heading>
+          <Text fontSize="2xl">
+            <Text as="b">Origin:</Text> {character?.origin?.name}
+          </Text>
+          <Text fontSize="2xl">
+            <Text as="b">Status:</Text> {character?.status}
+          </Text>
+          <Text fontSize="2xl">
+            <Text as="b">Gender:</Text> {character?.gender}
+          </Text>
+        </Flex>
       </Flex>
     </article>
   );

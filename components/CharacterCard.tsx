@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react';
+import { Box, Button } from '@chakra-ui/react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -20,11 +20,14 @@ function CharacterCard({ name, src, id }: CharacterCardProps) {
     >
       <Image src={src} alt={name} width={250} height={225} />
 
-      <Box as="h3" textAlign="center" my="1" color="gray.700" fontSize="lg">
-        <Link href={`/characters/${id}`} passHref>
-          <a>{name}</a>
-        </Link>
+      <Box as="h3" textAlign="center" my="1rem" color="gray.700" fontSize="lg">
+        <a>{name}</a>
       </Box>
+      <Button mx='auto' mb="0.5rem" display='block' colorScheme="green" size="md" mt="0.5rem">
+        <Link href={`/characters/${id}`} passHref>
+          <a>Read more</a>
+        </Link>
+      </Button>
     </Box>
   );
 }
