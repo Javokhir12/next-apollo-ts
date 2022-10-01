@@ -1,5 +1,5 @@
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import Home from '@/pages/index';
 import {
   FilterCharactersByNameDocument,
@@ -43,6 +43,13 @@ const successMock: MockedResponse<FilterCharactersByNameQuery> = {
   },
 };
 
+const errorMock: MockedResponse<FilterCharactersByNameQuery> = {
+  request: {
+    query: FilterCharactersByNameDocument,
+  },
+  error: new Error('Error while loading characters :/'),
+};
+
 function renderWithMockGraphQLProvider({
   mocks = [],
 }: {
@@ -64,7 +71,7 @@ describe('Home page', () => {
     expect(getByText('Rick && Morty')).toBeInTheDocument();
   });
 
-  it('renders a loading UI initially', () => {
+  it('renders loading UI initially', () => {
     const { getByText } = renderWithMockGraphQLProvider({});
 
     expect(getByText('Loading...')).toBeInTheDocument();
@@ -91,5 +98,13 @@ describe('Home page', () => {
     links.forEach((link, i) => {
       expect(link).toHaveAttribute('href', `/characters/${results[i].id}`);
     });
+  });
+
+  it('renders error UI', async () => {
+    const { findByText } = renderWithMockGraphQLProvider({
+      mocks: [errorMock],
+    });
+
+    expect(await findByText(errorMock.error!.message)).toBeInTheDocument();
   });
 });

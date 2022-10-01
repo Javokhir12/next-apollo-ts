@@ -53,31 +53,17 @@ const Home: NextPage = () => {
 
         {loading && !data && renderLoadingUI()}
         {error ? renderErrorUI(error) : null}
-        {data ? <CharactersList characters={data.characters} /> : null}
-
-        <Flex mt="1.2rem">
-          <Button
-            colorScheme="green"
-            size="lg"
-            ml="4rem"
-            mt="2rem"
-            disabled={!data?.characters?.info?.prev}
-            onClick={handlePrev}
-          >
-            Previous
-          </Button>
-          <Spacer />
-          <Button
-            colorScheme="green"
-            size="lg"
-            ml="4rem"
-            mt="2rem"
-            disabled={!data?.characters?.info?.next}
-            onClick={handleNext}
-          >
-            Next
-          </Button>
-        </Flex>
+        {data ? (
+          <>
+            <CharactersList characters={data.characters} />
+            {renderPagination({
+              handleNext,
+              handlePrev,
+              next: data?.characters?.info?.next,
+              prev: data?.characters?.info?.prev,
+            })}
+          </>
+        ) : null}
       </Container>
     </>
   );
@@ -117,7 +103,45 @@ function renderLoadingUI() {
 function renderErrorUI(error: { message: string; [key: string]: any }) {
   return (
     <Heading mb="3rem" textAlign="center" color="red.400">
-      {error.message} :/
+      {error.message}
     </Heading>
+  );
+}
+
+function renderPagination({
+  handleNext,
+  handlePrev,
+  next,
+  prev,
+}: {
+  prev: number | null | undefined;
+  next: number | null | undefined;
+  handlePrev: () => void;
+  handleNext: () => void;
+}) {
+  return (
+    <Flex mt="1.2rem">
+      <Button
+        colorScheme="green"
+        size="lg"
+        ml="4rem"
+        mt="2rem"
+        disabled={!prev}
+        onClick={handlePrev}
+      >
+        Previous
+      </Button>
+      <Spacer />
+      <Button
+        colorScheme="green"
+        size="lg"
+        ml="4rem"
+        mt="2rem"
+        disabled={!next}
+        onClick={handleNext}
+      >
+        Next
+      </Button>
+    </Flex>
   );
 }
